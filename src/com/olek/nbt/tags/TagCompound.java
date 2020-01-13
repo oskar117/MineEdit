@@ -15,4 +15,16 @@ public class TagCompound extends Tag {
     public void addTag(Tag tag) {
         data.add(tag);
     }
+
+    public List<Tag> getData() {
+        return data;
+    }
+
+    public Tag getData(int x) {
+        return data.get(x);
+    }
+
+    public void setData(List<Tag> data) {
+        this.data = data;
+    }
 }

@@ -1,5 +1,6 @@
 package com.olek.nbt.tags;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TagLongArray extends Tag {
@@ -9,6 +10,7 @@ public class TagLongArray extends Tag {
     public TagLongArray(String name, int length) {
         this.name = name;
         this.length = length;
+        this.payload = new ArrayList<TagLong>();
     }
 
     public int getLength() {

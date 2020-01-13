@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Main {
 
@@ -15,8 +16,11 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        String outp = "/home/olek/Projects/nbtparser/level_de.dat";
-        String in ="/home/olek/Projects/nbtparser/level.dat";
+        String outp = "D:\\zadanka\\nbtparser\\level_de.dat";
+        String in ="D:\\zadanka\\nbtparser\\level.dat";
+
+        //String outp = "/home/olek/Projects/nbtparser/level_de.dat";
+        //String in ="/home/olek/Projects/nbtparser/level.dat";
 
         FileUtils fileUtils = new FileUtils();
         FileOutputStream out = new FileOutputStream(outp);
@@ -26,7 +30,9 @@ public class Main {
         byte[] fileContent = Files.readAllBytes(file.toPath());
 
 
-        File region = new File("/home/olek/Projects/nbtparser/r.0.-1.mca");
+        //File region = new File("/home/olek/Projects/nbtparser/r.0.-1.mca");
+        File region = new File("D:\\zadanka\\nbtparser\\r.0.-1.mca");
+
         RegionFile regionFile = new RegionFile(region);
         DataInputStream test = regionFile.getChunkDataInputStream(0, 11);
         byte[] test2 = test.readAllBytes();
@@ -56,6 +62,107 @@ public class Main {
         return temp;
     }
 
+    public static TagInt getTagInt(String name, byte[] fileContent) {
+        System.out.print("(int)");
+        byte[] temp = getValue(fileContent, 4);
+        ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
+        int payload = buffer.put(temp).flip().getInt();
+        System.out.println(": "+payload);
+        return new TagInt(name, payload);
+    }
+
+    public static TagLong getTagLong(String name, byte[] fileContent) {
+        System.out.print("(long)");
+        byte[] temp = getValue(fileContent, 8);
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        Long payload = buffer.put(temp).flip().getLong();
+        System.out.println(": "+ payload);
+        return new TagLong(name, payload);
+    }
+
+    public static TagShort getTagShort(String name, byte[] fileContent) {
+        System.out.print("(short)");
+        byte[] temp = getValue(fileContent, 2);
+        ByteBuffer buffer = ByteBuffer.allocate(Short.BYTES);
+        short payload = buffer.put(temp).flip().getShort();
+        System.out.println(": "+payload);
+        return new TagShort(name, payload);
+    }
+
+    public static int getArrayLength(byte[] fileContent) {
+        byte[] temp = getValue(fileContent, 4);
+        ByteBuffer buffer = ByteBuffer.allocate(Integer.BYTES);
+        return buffer.put(temp).flip().getInt();
+    }
+
+    public static TagFloat getTagFloat(String name, byte[] fileContent) {
+        System.out.print("(float)");
+        byte[] temp = getValue(fileContent, 4);
+        ByteBuffer buffer = ByteBuffer.wrap(temp);
+        float payload = buffer.getFloat();
+        System.out.println(": "+ payload);
+        return new TagFloat(name, payload);
+    }
+
+    public static TagDouble getTagDouble(String name, byte[] fileContent) {
+        System.out.print("(double)");
+        byte[] temp = getValue(fileContent, 8);
+        ByteBuffer buffer = ByteBuffer.wrap(temp);
+        double payload = buffer.getDouble();
+        System.out.println(": "+ payload);
+        return new TagDouble(name, payload);
+    }
+
+    public static TagString getTagString(String name, byte[] fileContent) {
+        System.out.print("(string): ");
+        pointer++;
+        int stringLength = fileContent[pointer++]+pointer;
+        String payload="";
+        for(;pointer < stringLength; pointer++) {
+            System.out.print(Character.toString(fileContent[pointer]));
+            payload += Character.toString(fileContent[pointer]);
+        }
+        System.out.print("\n");
+        return new TagString(name, payload);
+    }
+
+    private static Tag getTagListValue(byte listType, byte[] fileContent) {
+        switch (listType) {
+            case 1: {
+                return new TagByte(null, fileContent[pointer++]);
+            } case 2: {
+                return getTagShort(null, fileContent);
+            } case 3: {
+                return getTagInt(null, fileContent);
+            } case 4: {
+                return getTagLong(null, fileContent);
+            } case 5: {
+                return getTagFloat(null, fileContent);
+            } case 6: {
+                return getTagDouble(null, fileContent);
+            } case 8: {
+                return getTagString(null, fileContent);
+            } case 10: {
+                stack.add(new TagCompound(null));
+                pointer +=0;
+                byte type;
+                String name="";
+                do {
+                    type = fileContent[pointer];
+                    if(stack.size() == 0 || stack.get(stack.size() - 1) instanceof TagCompound && type != 0) {
+                        name = getTagName(fileContent);
+                    }
+                    getTagPayload(type, fileContent, name);
+                } while(type != 0);
+
+                return new TagCompound("daszke");
+            }
+            default: {
+                return null;
+            }
+        }
+    }
+
     public static void getTagPayload(Byte type, byte[] fileContent, String name) {
         switch(type) {
             case 0: {
@@ -79,59 +186,37 @@ public class Main {
                 break;
             }
             case 2: {
-                System.out.print("(short)");
-                byte[] temp = getValue(fileContent, 2);
-                ByteBuffer buffer = ByteBuffer.allocate(Short.BYTES);
-                short payload = buffer.put(temp).flip().getShort();
-                System.out.println(": "+payload);
-                ((TagCompound) stack.get(stack.size() - 1)).addTag(new TagShort(name, payload));
+                TagShort tag = getTagShort(name, fileContent);
+                ((TagCompound) stack.get(stack.size() - 1)).addTag(tag);
                 break;
             }
             case 3: {
-                System.out.print("(int)");
-                byte[] temp = getValue(fileContent, 4);
-                ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-                int payload = buffer.put(temp).flip().getInt();
-                System.out.println(": "+payload);
-                ((TagCompound) stack.get(stack.size() - 1)).addTag(new TagInt(name, payload));
+                TagInt tag = getTagInt(name, fileContent);
+                ((TagCompound) stack.get(stack.size() - 1)).addTag(tag);
                 break;
             }
             case 4: {
-                System.out.print("(long)");
-                byte[] temp = getValue(fileContent, 8);
-                ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-                Long payload = buffer.put(temp).flip().getLong();
-                System.out.println(": "+ payload);
-                ((TagCompound) stack.get(stack.size() - 1)).addTag(new TagLong(name, payload));
+                TagLong tag = getTagLong(name, fileContent);
+                ((TagCompound) stack.get(stack.size() - 1)).addTag(tag);
                 break;
             }
             case 5: {
-                System.out.print("(float)");
-                byte[] temp = getValue(fileContent, 4);
-                ByteBuffer buffer = ByteBuffer.wrap(temp);
-                float payload = buffer.getFloat();
-                System.out.println(": "+ payload);
-                ((TagCompound) stack.get(stack.size() - 1)).addTag(new TagFloat(name, payload));
+                TagFloat tag = getTagFloat(name, fileContent);
+                ((TagCompound) stack.get(stack.size() - 1)).addTag(tag);
                 break;
             }
             case 6: {
-                System.out.print("(double)");
-                byte[] temp = getValue(fileContent, 8);
-                ByteBuffer buffer = ByteBuffer.wrap(temp);
-                double payload = buffer.getDouble();
-                System.out.println(": "+ payload);
-                ((TagCompound) stack.get(stack.size() - 1)).addTag(new TagDouble(name, payload));
+                TagDouble tag = getTagDouble(name, fileContent);
+                ((TagCompound) stack.get(stack.size() - 1)).addTag(tag);
                 break;
             }
             case 7: {
                 System.out.println("(byte array)");
-                byte[] temp = getValue(fileContent, 4);
-                ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-                int listLength = buffer.put(temp).flip().getInt();
 
-                TagByteArray list = new TagByteArray(name, listLength);
+                TagByteArray list = new TagByteArray(name, getArrayLength(fileContent));
+
                 for(int x = 0; x < list.getLength(); x++) {
-                    getTagPayload((byte)1, fileContent, null);
+                    list.addTag(new TagByte(null, fileContent[pointer++]));
                 }
 
                 ((TagCompound) stack.get(stack.size() - 1)).addTag(list);
@@ -139,16 +224,8 @@ public class Main {
                 break;
             }
             case 8: {
-                System.out.print("(string): ");
-                pointer++;
-                int stringLength = fileContent[pointer++]+pointer;
-                String payload="";
-                for(;pointer < stringLength; pointer++) {
-                    System.out.print(Character.toString(fileContent[pointer]));
-                    payload += Character.toString(fileContent[pointer]);
-                }
-                System.out.print("\n");
-                ((TagCompound) stack.get(stack.size() - 1)).addTag(new TagString(name, payload));
+                TagString tag = getTagString(name, fileContent);
+                ((TagCompound) stack.get(stack.size() - 1)).addTag(tag);
                 break;
             }
             case 9: {
@@ -156,9 +233,10 @@ public class Main {
                 byte listType = fileContent[pointer];
                 pointer +=4;
                 int listLength = fileContent[pointer++];
+
                 TagList list = new TagList(name, listType, listLength);
                 for(int x = 0; x < list.getLength(); x++) {
-                    getTagPayload(listType, fileContent, null);
+                    list.addTag(getTagListValue(listType, fileContent));
                 }
                 ((TagCompound) stack.get(stack.size() - 1)).addTag(list);
                 break;
@@ -166,36 +244,29 @@ public class Main {
             case 10: {
                 System.out.println("(compound)");
                 stack.add(new TagCompound(name));
-                // pointer++;
                 break;
             }
             case 11: {
                 System.out.println("(int array)");
-                byte[] temp = getValue(fileContent, 4);
-                ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-                int listLength = buffer.put(temp).flip().getInt();
 
-                TagIntArray list = new TagIntArray(name, listLength);
-                stack.add(list);
+                TagIntArray list = new TagIntArray(name, getArrayLength(fileContent));
 
                 for(int x = 0; x < list.getLength(); x++) {
-                    getTagPayload((byte)3, fileContent, null);
+                    list.addTag(getTagInt(null, fileContent));
                 }
-                list = (TagIntArray) stack.get(stack.size() - 1);
-                stack.remove(stack.get(stack.size() - 1));
+
                 ((TagCompound) stack.get(stack.size() - 1)).addTag(list);
                 break;
             }
             case 12: {
                 System.out.println("(long array)");
-                byte[] temp = getValue(fileContent, 4);
-                ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-                int listLength = buffer.put(temp).flip().getInt();
 
-                TagLongArray list = new TagLongArray(name, listLength);
+                TagLongArray list = new TagLongArray(name, getArrayLength(fileContent));
+
                 for(int x = 0; x < list.getLength(); x++) {
-                    getTagPayload((byte)4, fileContent, null);
+                    list.addTag(getTagLong(null, fileContent));
                 }
+
                 ((TagCompound) stack.get(stack.size() - 1)).addTag(list);
                 break;
             }
