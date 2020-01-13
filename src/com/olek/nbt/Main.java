@@ -31,10 +31,7 @@ public class Main {
         DataInputStream test = regionFile.getChunkDataInputStream(0, 11);
         byte[] test2 = test.readAllBytes();
 
-        for(int x = 0; x < test2.length; x++) {
-            System.out.println(test2[x]);
-        }
-        TagCompound decodedTag = decodeTag(fileContent);
+        TagCompound decodedTag = decodeTag(test2);
         System.out.print("xd");
     }
 
@@ -64,7 +61,6 @@ public class Main {
             case 0: {
                 System.out.println("(end)");
                 if(stack.size() <= 1) {
-                    System.out.println("koniec");
                     pointer++;
                     break;
                 }
@@ -133,7 +129,7 @@ public class Main {
                 ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
                 int listLength = buffer.put(temp).flip().getInt();
 
-                TagList list = new TagList(name, (byte) 1, listLength);
+                TagByteArray list = new TagByteArray(name, listLength);
                 for(int x = 0; x < list.getLength(); x++) {
                     getTagPayload((byte)1, fileContent, null);
                 }
@@ -178,10 +174,15 @@ public class Main {
                 byte[] temp = getValue(fileContent, 4);
                 ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
                 int listLength = buffer.put(temp).flip().getInt();
-                TagList list = new TagList(name, (byte) 3, listLength);
+
+                TagIntArray list = new TagIntArray(name, listLength);
+                stack.add(list);
+
                 for(int x = 0; x < list.getLength(); x++) {
                     getTagPayload((byte)3, fileContent, null);
                 }
+                list = (TagIntArray) stack.get(stack.size() - 1);
+                stack.remove(stack.get(stack.size() - 1));
                 ((TagCompound) stack.get(stack.size() - 1)).addTag(list);
                 break;
             }
@@ -190,7 +191,8 @@ public class Main {
                 byte[] temp = getValue(fileContent, 4);
                 ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
                 int listLength = buffer.put(temp).flip().getInt();
-                TagList list = new TagList(name, (byte) 4, listLength);
+
+                TagLongArray list = new TagLongArray(name, listLength);
                 for(int x = 0; x < list.getLength(); x++) {
                     getTagPayload((byte)4, fileContent, null);
                 }

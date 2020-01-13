@@ -4,12 +4,10 @@ import java.util.List;
 
 public class TagLongArray extends Tag {
     private List<TagLong> payload;
-    private byte payloadType;
     private int length;
 
-    public TagLongArray(String name, byte type, int length) {
+    public TagLongArray(String name, int length) {
         this.name = name;
-        this.payloadType = type;
         this.length = length;
     }
 
@@ -19,14 +17,6 @@ public class TagLongArray extends Tag {
 
     public void setLength(int length) {
         this.length = length;
-    }
-
-    public byte getPayloadType() {
-        return payloadType;
-    }
-
-    public void setPayloadType(byte payloadType) {
-        this.payloadType = payloadType;
     }
 
     public void addTag(TagLong e) {
