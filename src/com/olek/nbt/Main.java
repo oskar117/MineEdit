@@ -126,6 +126,38 @@ public class Main {
         return new TagString(name, payload);
     }
 
+    public static TagIntArray getTagIntArray(String name, byte[] fileContent) {
+        TagIntArray list = new TagIntArray(name, getArrayLength(fileContent));
+        System.out.println("(int array)");
+        for(int x = 0; x < list.getLength(); x++) {
+            list.addTag(getTagInt(null, fileContent));
+        }
+
+        return list;
+    }
+
+    public static TagLongArray getTagLongArray(String name, byte[] fileContent) {
+        System.out.println("(long array)");
+        TagLongArray list = new TagLongArray(name, getArrayLength(fileContent));
+
+        for(int x = 0; x < list.getLength(); x++) {
+            list.addTag(getTagLong(null, fileContent));
+        }
+
+        return list;
+    }
+
+    public static TagByteArray getTagByteArray(String name, byte[] fileContent) {
+        System.out.println("(byte array)");
+
+        TagByteArray list = new TagByteArray(name, getArrayLength(fileContent));
+
+        for(int x = 0; x < list.getLength(); x++) {
+            list.addTag(new TagByte(null, fileContent[pointer++]));
+        }
+        return list;
+    }
+
     private static Tag getTagListValue(byte listType, byte[] fileContent) {
         switch (listType) {
             case 1: {
@@ -139,11 +171,20 @@ public class Main {
             } case 5: {
                 return getTagFloat(null, fileContent);
             } case 6: {
+                System.out.print("no elo byte array");
+            } case 7: {
                 return getTagDouble(null, fileContent);
             } case 8: {
                 return getTagString(null, fileContent);
+            } case 9: {
+                return getTagByteArray(null, fileContent);
             } case 10: {
+                System.out.println("(compound)");
                 return new TagCompound(null);
+            } case 11: {
+                return getTagIntArray(null, fileContent);
+            } case 12: {
+                return getTagLongArray(null, fileContent);
             }
             default: {
                 return null;
@@ -155,10 +196,7 @@ public class Main {
         switch(type) {
             case 0: {
                 System.out.println("(end)");
-                if(stack.size() <= 1) {
-                    pointer++;
-                    break;
-                }
+                pointer++;
                 return new TagEnd();
             }
             case 1: {
@@ -186,14 +224,8 @@ public class Main {
                 return tag;
             }
             case 7: {
-                System.out.println("(byte array)");
 
-                TagByteArray list = new TagByteArray(name, getArrayLength(fileContent));
-
-                for(int x = 0; x < list.getLength(); x++) {
-                    list.addTag(new TagByte(null, fileContent[pointer++]));
-                }
-
+                TagByteArray list = getTagByteArray(name, fileContent);
                 return list;
 
             }
@@ -208,24 +240,41 @@ public class Main {
                 int listLength = fileContent[pointer++];
 
                 TagList list = new TagList(name, listType, listLength);
-                for(int x = 0; x < list.getLength(); x++) {
+                for(int x = 0; x < listLength; x++) {
                     Tag tag = getTagListValue(listType, fileContent);
 
                     if(tag instanceof TagCompound) {
-
+                        String name2;
                         byte typ;
-
                         do{
                             typ=fileContent[pointer];
-                            String name2 = getTagName(fileContent);
-                            Tag nestedTag = getTagPayload(typ, fileContent, name2);
-                            if(nestedTag instanceof TagEnd) {
-                                System.out.print("##################################################");
+                            if(typ != 0) {
+                                name2 = getTagName(fileContent);
+                            } else {
+                                name2 = null;
                             }
-                            ((TagCompound) tag).addTag(nestedTag);
+                            Tag nestedTag = getTagPayload(typ, fileContent, name2);
+                            if(!(nestedTag instanceof TagEnd)) {
+                                if(nestedTag instanceof TagCompound) {
+                                    byte typ3;
+                                    String name3;
+                                    do {
+                                        typ3=fileContent[pointer];
+                                        if(typ3 != 0) {
+                                            name3 = getTagName(fileContent);
+                                        } else {
+                                            name3 = null;
+                                        }
+                                        Tag cwelTag = getTagPayload(typ3, fileContent, name3);
+                                        if(!(cwelTag instanceof TagEnd)) {
+                                            ((TagCompound) nestedTag).addTag(cwelTag);
+                                        }
+                                    } while(typ3 !=0);
+                                }
+                                ((TagCompound) tag).addTag(nestedTag);
+                            }
 
                         } while (typ != 0);
-
                     }
                     list.addTag(tag);
                 }
@@ -236,25 +285,11 @@ public class Main {
                 return new TagCompound(name);
             }
             case 11: {
-                System.out.println("(int array)");
-
-                TagIntArray list = new TagIntArray(name, getArrayLength(fileContent));
-
-                for(int x = 0; x < list.getLength(); x++) {
-                    list.addTag(getTagInt(null, fileContent));
-                }
-
+                TagIntArray list = getTagIntArray(name, fileContent);
                 return list;
             }
             case 12: {
-                System.out.println("(long array)");
-
-                TagLongArray list = new TagLongArray(name, getArrayLength(fileContent));
-
-                for(int x = 0; x < list.getLength(); x++) {
-                    list.addTag(getTagLong(null, fileContent));
-                }
-
+                TagLongArray list = getTagLongArray(name, fileContent);
                 return list;
             }
             default: {
@@ -262,7 +297,7 @@ public class Main {
                 return null;
             }
         }
-        return null;
+        //return null;
     }
 
     public static TagCompound decodeTag(byte[] fileContent) {
