@@ -7,4 +7,12 @@ public class TagLong extends Tag {
         this.name = name;
         this.payload = payload;
     }
+
+    public Long getPayload() {
+        return payload;
+    }
+
+    public void setPayload(Long payload) {
+        this.payload = payload;
+    }
 }

@@ -16,6 +16,15 @@ public class TagList extends Tag {
         this.payload = new ArrayList<Tag>();
     }
 
+    public Tag getTag(String name) {
+        for(Tag tag : payload) {
+            if(tag.getName().equals(name)) {
+                return tag;
+            }
+        }
+        return null;
+    }
+
     public int getLength() {
         return length;
     }

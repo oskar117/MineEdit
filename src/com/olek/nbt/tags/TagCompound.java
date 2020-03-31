@@ -16,6 +16,19 @@ public class TagCompound extends Tag {
         data.add(tag);
     }
 
+    public void deleteLast() {
+        data.remove(data.size()-1);
+    }
+
+    public Tag getTag(String name) {
+        for(Tag tag : data) {
+            if(tag.getName().equals(name)) {
+                return tag;
+            }
+        }
+        return null;
+    }
+
     public List<Tag> getData() {
         return data;
     }
@@ -26,5 +39,9 @@ public class TagCompound extends Tag {
 
     public void setData(List<Tag> data) {
         this.data = data;
+    }
+
+    public Tag getLastTag() {
+        return data.get(data.size() - 1);
     }
 }

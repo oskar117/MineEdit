@@ -1,8 +1,9 @@
 package com.olek.nbt.tags;
 
+import java.util.List;
+
 public abstract class Tag {
     public String name;
-    private int length;
 
     public String getName() {
         return name;

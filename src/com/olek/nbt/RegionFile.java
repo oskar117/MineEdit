@@ -144,6 +144,7 @@ public class RegionFile {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     /* the modification date of the region file when it was first opened */
@@ -192,7 +193,7 @@ public class RegionFile {
         try {
             int offset = getOffset(x, z);
             if (offset == 0) {
-                // debugln("READ", x, z, "miss");
+                //debugln("READ", x, z, "miss");
                 return null;
             }
 
