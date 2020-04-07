@@ -9,11 +9,10 @@ public class Chunk {
 
     private final TagCompound tg;
     private TagList section;
-    private final Heightmap heightMap;
+    private Heightmap heightMap;
     private Block[][][] blocks;
 
     public Chunk(TagCompound tg) {
-        heightMap = new Heightmap();
         this.tg = tg;
         blocks = new Block[256][16][16];
         section = (TagList) tg.getTag("Sections");
@@ -46,6 +45,11 @@ public class Chunk {
                 System.out.println("error");
             }
         }
+        heightMap = new Heightmap(blocks);
+    }
+
+    public Heightmap getHeightMap() {
+        return heightMap;
     }
 
     private void generateBlocks(Tag blockStates, Tag palette, int sectionY) {

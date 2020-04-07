@@ -4,7 +4,9 @@ import com.olek.nbt.FileUtils;
 import com.olek.nbt.NbtParser;
 import com.olek.nbt.RegionFile;
 import com.olek.nbt.tags.*;
+import com.olek.world.Block;
 import com.olek.world.Chunk;
+import com.olek.world.Heightmap;
 
 import javax.swing.*;
 import java.io.*;
@@ -33,10 +35,10 @@ public class Main {
 
 
         //File region = new File("/home/olek/Projects/nbtparser/r.0.-1.mca");
-        File region = new File("D:\\zadanka\\nbtparser\\r.0.-1.mca");
+        File region = new File("D:\\zadanka\\nbtparser\\r.0.0.mca");
 
         RegionFile regionFile = new RegionFile(region);
-        DataInputStream test = regionFile.getChunkDataInputStream(0, 11);
+        DataInputStream test = regionFile.getChunkDataInputStream(1, 1);
 
         byte[] test2 = test.readAllBytes();
 
@@ -44,7 +46,14 @@ public class Main {
        TagCompound decodedTag = parser.decodeTag(test2);
 
        Chunk chunkTest = new Chunk(decodedTag);
-       System.out.print("xd");
+       Heightmap map = chunkTest.getHeightMap();
+       Block[][] mapArr = map.getMap();
+       for (int x = 0; x < 16; x++) {
+           for (int y = 0; y < 16; y++) {
+               System.out.print(mapArr[x][y].getName()+" | ");
+           }
+           System.out.println();
+       }
 
         /*SwingUtilities.invokeLater(new Runnable() {
             @Override

@@ -8,4 +8,8 @@ public class Block {
     public Block(String name) {
         this.name = name;
     }
+
+    public String getName() {
+        return name;
+    }
 }
