@@ -129,7 +129,7 @@ public class NbtParser {
             } case 5: {
                 return getTagFloat(null, fileContent);
             } case 6: {
-                return getTagDouble(null, fileContent);
+                    return getTagDouble(null, fileContent);
             } case 8: {
                 return getTagString(null, fileContent);
             } case 10: {
