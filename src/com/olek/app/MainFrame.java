@@ -11,6 +11,7 @@ public class MainFrame extends JFrame {
     public static final int HEIGHT = 720;
 
     private Toolbar toolbar;
+    private MapFrame mapFrame;
 
     public MainFrame() {
         super("Mapper by Olek");
@@ -18,8 +19,9 @@ public class MainFrame extends JFrame {
         setSize(1280, 720);
 
         toolbar = new Toolbar();
+        mapFrame = new MapFrame();
         //add(toolbar, BorderLayout.NORTH);
-        add(new MapFrame(), BorderLayout.CENTER);
+        add(mapFrame, BorderLayout.CENTER);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         setVisible(true);

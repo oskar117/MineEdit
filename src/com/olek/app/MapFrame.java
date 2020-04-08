@@ -103,24 +103,5 @@ public class MapFrame extends JPanel {
                 g.fillRect(y, x, 45, 45);
             }
         }
-
-//        for (int i = 0; i < MainFrame.HEIGHT; i += x) {
-//            if (black) {
-//                black = false;
-//            } else {
-//                black = true;
-//            }
-//            for (int j = 0; j < MainFrame.WIDTH; j += x) {
-//                if (black) {
-//                    g.setColor(Color.WHITE);
-//                    g.fillRect(j, i, x, x);
-//                    black = false;
-//                } else {
-//                    g.setColor(Color.BLACK);
-//                    g.fillRect(j, i, x, x);
-//                    black = true;
-//                }
-//            }
-//        }
     }
 }
