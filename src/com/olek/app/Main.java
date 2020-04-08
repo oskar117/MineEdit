@@ -20,7 +20,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        String outp = "D:\\zadanka\\nbtparser\\level_de.dat";
+      /*  String outp = "D:\\zadanka\\nbtparser\\level_de.dat";
         String in ="D:\\zadanka\\nbtparser\\level.dat";
 
         //String outp = "/home/olek/Projects/nbtparser/level_de.dat";
@@ -54,12 +54,12 @@ public class Main {
            }
            System.out.println();
        }
-
-        /*SwingUtilities.invokeLater(new Runnable() {
+*/
+        SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 new MainFrame();
             }
-        });*/
+        });
     }
 }

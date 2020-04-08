@@ -7,6 +7,9 @@ import java.awt.*;
 
 public class MainFrame extends JFrame {
 
+    public static final int WIDTH = 1280;
+    public static final int HEIGHT = 720;
+
     private Toolbar toolbar;
 
     public MainFrame() {
@@ -15,8 +18,8 @@ public class MainFrame extends JFrame {
         setSize(1280, 720);
 
         toolbar = new Toolbar();
-        add(toolbar, BorderLayout.NORTH);
-
+        //add(toolbar, BorderLayout.NORTH);
+        add(new MapFrame(), BorderLayout.CENTER);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         setVisible(true);
