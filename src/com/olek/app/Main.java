@@ -50,7 +50,7 @@ public class Main {
        Block[][] mapArr = map.getMap();
        for (int x = 0; x < 16; x++) {
            for (int y = 0; y < 16; y++) {
-               System.out.print(mapArr[x][y].getName()+" | ");
+               System.out.print(mapArr[x][y].getName().replaceAll("minecraft:", "")+" | ");
            }
            System.out.println();
        }

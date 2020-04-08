@@ -129,7 +129,7 @@ public class Chunk {
                     ++y;
                 }
                 if(i%bitsPerTile == 0){
-                    returnArray[x][z][y] =  Integer.parseInt(reverseString(binaryNumber), 2);
+                    returnArray[z][y][x] =  Integer.parseInt(reverseString(binaryNumber), 2);
                     binaryNumber="";
                     ++x;
                 }
