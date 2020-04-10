@@ -14,9 +14,9 @@ public class Chunk {
 
     public Chunk(TagCompound tg) {
         this.tg = tg;
-        blocks = new Block[256][16][16];
         section = (TagList) tg.getTag("Sections");
         List<Tag> tagList = section.getPayload();
+        blocks = new Block[16*(tagList.size()-1)][16][16];
 
         //przeskakujemy po sekcjach
         for(Tag t : tagList) {
@@ -38,14 +38,29 @@ public class Chunk {
                     palette = searchThroughSectionData;
                 }
             }
-            
-            if(blockStates != null && palette != null && y != -1) {
-                generateBlocks(blockStates, palette, y);
+
+            if(y != -1) {
+                if(blockStates != null && palette != null) {
+                    generateBlocks(blockStates, palette, y);
+                } else {
+                    fillWithAir(y);
+                }
             } else {
-                System.out.println("error");
+                System.out.println("y = -1");
             }
         }
         heightMap = new Heightmap(blocks);
+    }
+
+    private void fillWithAir(int sectionY) {
+        Block air = new Block("minecraft:air");
+        for(int z = 0; z < 16; z++) {
+            for(int y = 0; y < 16; y++) {
+                for(int x = 0; x<16; x++) {
+                    blocks[(sectionY*16)+x][y][z] = air;
+                }
+            }
+        }
     }
 
     public Heightmap getHeightMap() {
