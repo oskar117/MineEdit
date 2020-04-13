@@ -13,9 +13,14 @@ public class Heightmap {
         for(int y = blocks.length-1; y >= 0; y--){
             for(int x = 0; x < 16; x++) {
                 for(int z = 0; z < 16; z++) {
-                    if(!blocks[y][x][z].getName().equals("minecraft:air") && map[x][z] == null) {
-                        map[x][z] = blocks[y][x][z];
+                    try {
+                        if(!blocks[y][x][z].getName().equals("minecraft:air") && map[x][z] == null) {
+                            map[x][z] = blocks[y][x][z];
+                        }
+                    } catch (NullPointerException e){
+                        System.out.println("null w heightmapie: "+ y +" " + x + " " + z);
                     }
+
                 }
             }
         }

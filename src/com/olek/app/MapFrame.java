@@ -15,9 +15,9 @@ import java.nio.file.Files;
 
 public class MapFrame extends JPanel {
 
-    @Override
-    protected void paintComponent(Graphics g) {
+    private Chunk[][] regionChunks;
 
+    public MapFrame() {
         String outp = "D:\\zadanka\\nbtparser\\level_de.dat";
         String in ="D:\\zadanka\\nbtparser\\level.dat";
 
@@ -51,11 +51,11 @@ public class MapFrame extends JPanel {
         RegionFile regionFile = new RegionFile(region);
         NbtParser parser;
 
-        Chunk[][] regionChunks = new Chunk[32][32];
+        regionChunks = new Chunk[32][32];
         DataInputStream chunkDataStream;
-        for (int x = 0; x < 4; x++) {
+        for (int x = 0; x < 32; x++) {
 
-            for (int z = 0; z < 4; z++) {
+            for (int z = 0; z < 32; z++) {
 
                 try {
                     parser = new NbtParser();
@@ -71,7 +71,10 @@ public class MapFrame extends JPanel {
             }
 
         }
+    }
 
+    @Override
+    protected void paintComponent(Graphics g) {
 
     /*    DataInputStream test = regionFile.getChunkDataInputStream(1, 1);
         byte[] test2 = new byte[0];
@@ -89,55 +92,52 @@ public class MapFrame extends JPanel {
         Block[][] mapArr = map.getMap();
 
         super.paintComponent(g);*/
-
         int chunkSize = 10;
 
-        for (int x = 0; x < 4; x++) {
-            for (int y = 0; y < 4; y++) {
+        for (int x = 0; x < 32; x++) {
+            for (int y = 0; y < 32; y++) {
                 Heightmap map = regionChunks[x][y].getHeightMap();
                 Block[][] mapArr = map.getMap();
 
                 for (int xx = 0; xx < 16; xx++) {
                     for (int yy = 0; yy < 16; yy++) {
-                        String test23 = mapArr[xx][yy].getName().replaceAll("minecraft:", "");
-                        switch(test23) {
-                            case "redstone_block":{
-                                g.setColor(Color.RED);
-                                break;
-                            }
-                            case "grass":
-                            case "grass_block":
-                            case "tall_grass":
-                            case "poppy": {
-                                g.setColor(Color.GREEN);
-                                break;
-                            }
-                            case "sandstone":{
-                                g.setColor(new Color(222,215, 172));
-                                break;
-                            }
-                            case "slime_block": {
-                                g.setColor(Color.cyan);
-                                break;
-                            }
-                            case "polished_diorite": {
-                                g.setColor(Color.white);
-                                break;
-                            }
-                            default: {
-                                g.setColor(Color.gray);
-                                break;
-                            }
-
-                        }
+                        String tile = mapArr[xx][yy].getName().replaceAll("minecraft:", "");
+                        g.setColor(getTileColor(tile));
                         int yyy = (y*16*chunkSize)+(xx*chunkSize);
                         int zzz = (x*16*chunkSize)+(yy*chunkSize);
-                        System.out.println("Koord yyy: "+yyy + " zzz: "+ zzz);
+                        //System.out.println("Koord yyy: "+yyy + " zzz: "+ zzz);
                         g.fillRect(zzz, yyy, chunkSize, chunkSize);
                     }
                 }
             }
         }
         System.out.println("Rendered!");
+    }
+
+    private Color getTileColor(String name) {
+        switch(name) {
+            case "redstone_block":{
+                return Color.RED;
+            }
+            case "grass":
+            case "grass_block":
+            case "tall_grass":
+            case "poppy": {
+                return Color.GREEN;
+            }
+            case "sandstone":{
+                return new Color(222,215, 172);
+            }
+            case "slime_block": {
+                return Color.CYAN;
+            }
+            case "diorite":
+            case "polished_diorite": {
+                return Color.WHITE;
+            }
+            default: {
+                return Color.GRAY;
+            }
+        }
     }
 }

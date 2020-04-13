@@ -55,13 +55,18 @@ public class Chunk {
 
     private void fillWithAir(int sectionY) {
         Block air = new Block("minecraft:air");
-        for(int z = 0; z < 16; z++) {
-            for(int y = 0; y < 16; y++) {
-                for(int x = 0; x<16; x++) {
-                    blocks[(sectionY*16)+x][y][z] = air;
+        try {
+            for(int z = 0; z < 16; z++) {
+                for(int y = 0; y < 16; y++) {
+                    for(int x = 0; x<16; x++) {
+                        blocks[(sectionY*16)+x][y][z] = air;
+                    }
                 }
             }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("fill with air exception");
         }
+
     }
 
     public Heightmap getHeightMap() {
