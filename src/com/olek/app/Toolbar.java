@@ -9,6 +9,13 @@ public class Toolbar extends JPanel {
     private JButton test2;
 
     public Toolbar() {
+
+        Dimension dim = getPreferredSize();
+        dim.width=200;
+        setPreferredSize(dim);
+
+        setBorder(BorderFactory.createTitledBorder("Options"));
+
         test1 = new JButton("test1");
         test2 = new JButton("test2");
 

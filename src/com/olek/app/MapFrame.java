@@ -49,59 +49,95 @@ public class MapFrame extends JPanel {
         File region = new File("D:\\zadanka\\nbtparser\\r.0.0.mca");
 
         RegionFile regionFile = new RegionFile(region);
-        DataInputStream test = regionFile.getChunkDataInputStream(1, 1);
+        NbtParser parser;
 
+        Chunk[][] regionChunks = new Chunk[32][32];
+        DataInputStream chunkDataStream;
+        for (int x = 0; x < 4; x++) {
+
+            for (int z = 0; z < 4; z++) {
+
+                try {
+                    parser = new NbtParser();
+                    chunkDataStream = regionFile.getChunkDataInputStream(x, z);
+                    regionChunks[x][z] = new Chunk(parser.decodeTag(chunkDataStream.readAllBytes()));
+
+                    //Heightmap map = chunkTest.getHeightMap();
+                    //Block[][] mapArr = map.getMap();
+
+                } catch (IOException e) {
+                    System.out.println("err: " +e.getMessage());
+                }
+            }
+
+        }
+
+
+    /*    DataInputStream test = regionFile.getChunkDataInputStream(1, 1);
         byte[] test2 = new byte[0];
+
         try {
             test2 = test.readAllBytes();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        NbtParser parser = new NbtParser();
         TagCompound decodedTag = parser.decodeTag(test2);
 
         Chunk chunkTest = new Chunk(decodedTag);
         Heightmap map = chunkTest.getHeightMap();
         Block[][] mapArr = map.getMap();
 
-        super.paintComponent(g);
+        super.paintComponent(g);*/
 
-        for (int x = 0; x < MainFrame.HEIGHT; x+= 45) {
-            for (int y = 0; y < MainFrame.HEIGHT; y+= 45) {
-                String test23 = mapArr[x/45][y/45].getName().replaceAll("minecraft:", "");
-                switch(test23) {
-                    case "redstone_block":{
-                        g.setColor(Color.RED);
-                        break;
-                    }
-                    case "grass":
-                    case "grass_block":
-                    case "tall_grass":
-                    case "poppy": {
-                        g.setColor(Color.GREEN);
-                        break;
-                    }
-                    case "sandstone":{
-                        g.setColor(Color.YELLOW);
-                        break;
-                    }
-                    case "slime_block": {
-                        g.setColor(Color.cyan);
-                        break;
-                    }
-                    case "polished_diorite": {
-                        g.setColor(Color.white);
-                        break;
-                    }
-                    default: {
-                        g.setColor(Color.gray);
-                        break;
-                    }
+        int chunkSize = 10;
 
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 4; y++) {
+                Heightmap map = regionChunks[x][y].getHeightMap();
+                Block[][] mapArr = map.getMap();
+
+                for (int xx = 0; xx < 16; xx++) {
+                    for (int yy = 0; yy < 16; yy++) {
+                        String test23 = mapArr[xx][yy].getName().replaceAll("minecraft:", "");
+                        switch(test23) {
+                            case "redstone_block":{
+                                g.setColor(Color.RED);
+                                break;
+                            }
+                            case "grass":
+                            case "grass_block":
+                            case "tall_grass":
+                            case "poppy": {
+                                g.setColor(Color.GREEN);
+                                break;
+                            }
+                            case "sandstone":{
+                                g.setColor(new Color(222,215, 172));
+                                break;
+                            }
+                            case "slime_block": {
+                                g.setColor(Color.cyan);
+                                break;
+                            }
+                            case "polished_diorite": {
+                                g.setColor(Color.white);
+                                break;
+                            }
+                            default: {
+                                g.setColor(Color.gray);
+                                break;
+                            }
+
+                        }
+                        int yyy = (y*16*chunkSize)+(xx*chunkSize);
+                        int zzz = (x*16*chunkSize)+(yy*chunkSize);
+                        System.out.println("Koord yyy: "+yyy + " zzz: "+ zzz);
+                        g.fillRect(zzz, yyy, chunkSize, chunkSize);
+                    }
                 }
-                g.fillRect(y, x, 45, 45);
             }
         }
+        System.out.println("Rendered!");
     }
 }

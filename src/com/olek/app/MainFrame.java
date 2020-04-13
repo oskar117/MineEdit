@@ -16,11 +16,11 @@ public class MainFrame extends JFrame {
     public MainFrame() {
         super("Mapper by Olek");
         setLayout(new BorderLayout());
-        setSize(1280, 720);
+        setSize(WIDTH, HEIGHT);
 
         toolbar = new Toolbar();
         mapFrame = new MapFrame();
-        //add(toolbar, BorderLayout.NORTH);
+        add(toolbar, BorderLayout.WEST);
         add(mapFrame, BorderLayout.CENTER);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);

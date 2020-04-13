@@ -43,10 +43,11 @@ public class Chunk {
                 if(blockStates != null && palette != null) {
                     generateBlocks(blockStates, palette, y);
                 } else {
+                    System.out.println("powietrze: "+y);
                     fillWithAir(y);
                 }
             } else {
-                System.out.println("y = -1");
+                //System.out.println("y = -1");
             }
         }
         heightMap = new Heightmap(blocks);
@@ -151,10 +152,6 @@ public class Chunk {
             }
         }
         return returnArray;
-    }
-
-    private void renderHeightMap(TagCompound tg) {
-
     }
 
     private String reverseString(String string) {
