@@ -34,6 +34,9 @@ public class MainFrame extends JFrame {
         });
 
         mapFrame.setModel(mapModel);
+        MapMouseController mouseController = new MapMouseController(mapModel);
+        mapFrame.addMouseListener(mouseController);
+        mapFrame.addMouseMotionListener(mouseController);
 
         add(toolbar, BorderLayout.WEST);
         add(mapFrame, BorderLayout.CENTER);

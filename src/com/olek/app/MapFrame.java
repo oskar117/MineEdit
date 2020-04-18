@@ -11,6 +11,7 @@ import com.olek.world.Heightmap;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.*;
 import java.nio.file.Files;
@@ -26,33 +27,6 @@ public class MapFrame extends JPanel {
 
         //String outp = "/home/olek/Projects/nbtparser/level_de.dat";
         //String in ="/home/olek/Projects/nbtparser/level.dat";
-
-        addMouseMotionListener(new MouseMotionListener() {
-
-            int prevX = 0;
-            int prevY = 0;
-
-            @Override
-            public void mouseDragged(MouseEvent mouseEvent) {
-                int currX = mouseEvent.getX();
-                int currY = mouseEvent.getY();
-
-                if(prevX != 0 && prevY != 0) {
-
-                    model.setOffsetX(model.getOffsetX() + (currX - prevX));
-                    model.setOffsetY(model.getOffsetY() + (currY - prevY));
-
-                    model.update();
-                }
-
-                prevX = currX;
-                prevY = currY;
-
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent mouseEvent) {}
-        });
 
         FileUtils fileUtils = new FileUtils();
         FileOutputStream out = null;

@@ -45,4 +45,13 @@ public class MapModel {
     public void setChunkSize(int chunkSize) {
         this.chunkSize = chunkSize;
     }
+
+    @Override
+    public String toString() {
+        return "MapModel{" +
+                "offsetX=" + offsetX +
+                ", offsetY=" + offsetY +
+                ", chunkSize=" + chunkSize +
+                '}';
+    }
 }
