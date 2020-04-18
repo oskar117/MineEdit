@@ -10,12 +10,15 @@ import com.olek.world.Heightmap;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.io.*;
 import java.nio.file.Files;
 
 public class MapFrame extends JPanel {
 
     private Chunk[][] regionChunks;
+    private MapModel model;
 
     public MapFrame() {
         String outp = "D:\\zadanka\\nbtparser\\level_de.dat";
@@ -23,6 +26,33 @@ public class MapFrame extends JPanel {
 
         //String outp = "/home/olek/Projects/nbtparser/level_de.dat";
         //String in ="/home/olek/Projects/nbtparser/level.dat";
+
+        addMouseMotionListener(new MouseMotionListener() {
+
+            int prevX = 0;
+            int prevY = 0;
+
+            @Override
+            public void mouseDragged(MouseEvent mouseEvent) {
+                int currX = mouseEvent.getX();
+                int currY = mouseEvent.getY();
+
+                if(prevX != 0 && prevY != 0) {
+
+                    model.setOffsetX(model.getOffsetX() + (currX - prevX));
+                    model.setOffsetY(model.getOffsetY() + (currY - prevY));
+
+                    model.update();
+                }
+
+                prevX = currX;
+                prevY = currY;
+
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent mouseEvent) {}
+        });
 
         FileUtils fileUtils = new FileUtils();
         FileOutputStream out = null;
@@ -60,12 +90,18 @@ public class MapFrame extends JPanel {
                 try {
                     parser = new NbtParser();
                     chunkDataStream = regionFile.getChunkDataInputStream(x, z);
-                    regionChunks[x][z] = new Chunk(parser.decodeTag(chunkDataStream.readAllBytes()));
+
+                    if(chunkDataStream != null) {
+                        regionChunks[x][z] = new Chunk(parser.decodeTag(chunkDataStream.readAllBytes()));
+                    } else {
+                        regionChunks[x][z] = null;
+                    }
 
                     //Heightmap map = chunkTest.getHeightMap();
                     //Block[][] mapArr = map.getMap();
 
-                } catch (IOException e) {
+                } catch (IOException | Chunk.EmptyChunkException e) {
+                    regionChunks[x][z] = null;
                     System.out.println("err: " +e.getMessage());
                 }
             }
@@ -90,12 +126,15 @@ public class MapFrame extends JPanel {
         Chunk chunkTest = new Chunk(decodedTag);
         Heightmap map = chunkTest.getHeightMap();
         Block[][] mapArr = map.getMap();
+*/
+        super.paintComponent(g);
 
-        super.paintComponent(g);*/
-        int chunkSize = 10;
+        int chunkSize = model.getChunkSize();
 
         for (int x = 0; x < 32; x++) {
             for (int y = 0; y < 32; y++) {
+
+                if(regionChunks[x][y] == null) continue;
                 Heightmap map = regionChunks[x][y].getHeightMap();
                 Block[][] mapArr = map.getMap();
 
@@ -103,10 +142,9 @@ public class MapFrame extends JPanel {
                     for (int yy = 0; yy < 16; yy++) {
                         String tile = mapArr[xx][yy].getName().replaceAll("minecraft:", "");
                         g.setColor(getTileColor(tile));
-                        int yyy = (y*16*chunkSize)+(xx*chunkSize);
-                        int zzz = (x*16*chunkSize)+(yy*chunkSize);
-                        //System.out.println("Koord yyy: "+yyy + " zzz: "+ zzz);
-                        g.fillRect(zzz, yyy, chunkSize, chunkSize);
+                        int xxx = (x * 16 * chunkSize) + (yy * chunkSize) + model.getOffsetX();
+                        int yyy = (y * 16 * chunkSize) + (xx * chunkSize) + model.getOffsetY();
+                        g.fillRect(xxx, yyy, chunkSize, chunkSize);
                     }
                 }
             }
@@ -139,5 +177,9 @@ public class MapFrame extends JPanel {
                 return Color.GRAY;
             }
         }
+    }
+
+    public void setModel(MapModel model) {
+        this.model = model;
     }
 }

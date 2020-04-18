@@ -12,10 +12,11 @@ public class Chunk {
     private Heightmap heightMap;
     private Block[][][] blocks;
 
-    public Chunk(TagCompound tg) {
+    public Chunk(TagCompound tg) throws EmptyChunkException {
         this.tg = tg;
         section = (TagList) tg.getTag("Sections");
         List<Tag> tagList = section.getPayload();
+        if(tagList.size() == 0) throw new EmptyChunkException();
         blocks = new Block[16*(tagList.size()-1)][16][16];
 
         //przeskakujemy po sekcjach
@@ -164,5 +165,11 @@ public class Chunk {
         input1.append(string);
         input1.reverse();
         return String.valueOf(input1);
+    }
+
+    public class EmptyChunkException extends Exception {
+        public EmptyChunkException() {
+            super();
+        }
     }
 }
