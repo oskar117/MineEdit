@@ -91,21 +91,6 @@ public class MapFrame extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
 
-    /*    DataInputStream test = regionFile.getChunkDataInputStream(1, 1);
-        byte[] test2 = new byte[0];
-
-        try {
-            test2 = test.readAllBytes();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        TagCompound decodedTag = parser.decodeTag(test2);
-
-        Chunk chunkTest = new Chunk(decodedTag);
-        Heightmap map = chunkTest.getHeightMap();
-        Block[][] mapArr = map.getMap();
-*/
         super.paintComponent(g);
 
         int chunkSize = model.getChunkSize();
@@ -140,15 +125,14 @@ public class MapFrame extends JPanel {
             case "grass_block":
             case "tall_grass":
             case "poppy": {
-                return Color.GREEN;
-            }
-            case "sandstone":{
+                return new Color(131, 150, 58);
+            } case "sandstone":{
                 return new Color(222,215, 172);
-            }
-            case "slime_block": {
+            } case "slime_block": {
                 return Color.CYAN;
-            }
-            case "diorite":
+            } case "oak_leaves": {
+                return new Color(79, 111, 32);
+            } case "diorite":
             case "polished_diorite": {
                 return Color.WHITE;
             }
