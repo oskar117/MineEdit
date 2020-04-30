@@ -1,10 +1,11 @@
 package com.olek.nbt.tags;
 
 public class TagByte extends Tag {
+
     private Byte payload;
 
     public TagByte(String name, byte payload) {
-        this.name = name;
+        super(name);
         this.payload = payload;
     }
 

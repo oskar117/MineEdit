@@ -10,10 +10,10 @@ public class TagList extends Tag {
     private int length;
 
     public TagList(String name, byte type, int length) {
-        this.name = name;
+        super(name);
         this.payloadType = type;
         this.length = length;
-        this.payload = new ArrayList<Tag>();
+        this.payload = new ArrayList<>();
     }
 
     public Tag getTag(String name) {

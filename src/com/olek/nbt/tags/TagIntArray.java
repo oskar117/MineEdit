@@ -8,9 +8,9 @@ public class TagIntArray extends Tag {
     private int length;
 
     public TagIntArray(String name, int length) {
-        this.name = name;
+        super(name);
         this.length = length;
-        this.payload = new ArrayList<TagInt>();
+        this.payload = new ArrayList<>();
     }
 
     public int getLength() {

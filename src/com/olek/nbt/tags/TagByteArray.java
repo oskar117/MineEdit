@@ -4,21 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TagByteArray extends Tag {
+
     private List<TagByte> payload;
     private int length;
 
     public TagByteArray(String name, int length) {
-        this.name = name;
+        super(name);
         this.length = length;
-        this.payload = new ArrayList<TagByte>();
+        this.payload = new ArrayList<>();
     }
 
     public int getLength() {
         return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
     }
 
     public void addTag(TagByte e) {

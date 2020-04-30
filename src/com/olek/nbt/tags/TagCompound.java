@@ -8,8 +8,8 @@ public class TagCompound extends Tag {
     private List<Tag> data;
 
     public TagCompound(String name) {
-        this.name = name;
-        this.data = new ArrayList<Tag>();
+        super(name);
+        this.data = new ArrayList<>();
     }
 
     public void addTag(Tag tag) {

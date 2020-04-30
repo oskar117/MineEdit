@@ -3,9 +3,14 @@ package com.olek.nbt.tags;
 import java.util.List;
 
 public abstract class Tag {
-    public String name;
 
-    public String getName() {
+    protected String name;
+
+    protected Tag(String name) {
+        this.name = name;
+    }
+
+    public final String getName() {
         return name;
     }
 

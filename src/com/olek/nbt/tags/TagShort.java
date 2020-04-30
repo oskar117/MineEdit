@@ -4,7 +4,7 @@ public class TagShort extends Tag {
     private short payload;
 
     public TagShort(String name, short payload) {
-        this.name = name;
+        super(name);
         this.payload = payload;
     }
 }

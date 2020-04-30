@@ -4,7 +4,7 @@ public class TagLong extends Tag {
     private Long payload;
 
     public TagLong(String name, Long payload) {
-        this.name = name;
+        super(name);
         this.payload = payload;
     }
 
