@@ -22,7 +22,7 @@ public class MapFrame extends JPanel {
     private MapModel model;
 
     public MapFrame() {
-        String outp = "D:\\zadanka\\nbtparser\\level_de.dat";
+       /* String outp = "D:\\zadanka\\nbtparser\\level_de.dat";
         String in ="D:\\zadanka\\nbtparser\\level.dat";
 
         //String outp = "/home/olek/Projects/nbtparser/level_de.dat";
@@ -47,10 +47,10 @@ public class MapFrame extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        */
 
         //File region = new File("/home/olek/Projects/nbtparser/r.0.-1.mca");
-        File region = new File("D:\\zadanka\\nbtparser\\r.0.0.mca");
+        File region = new File("D:\\zadanka\\nbtparser\\r.21.37.mca");
 
         RegionFile regionFile = new RegionFile(region);
         NbtParser parser;
@@ -60,6 +60,8 @@ public class MapFrame extends JPanel {
         for (int x = 0; x < 32; x++) {
 
             for (int z = 0; z < 32; z++) {
+
+                System.out.println("CHUNK: "+ x + " " + z);
 
                 try {
                     parser = new NbtParser();
@@ -78,6 +80,9 @@ public class MapFrame extends JPanel {
                     regionChunks[x][z] = null;
                     System.out.println("err: " +e.getMessage());
                 }
+
+                System.out.println("CHUNK DONE");
+
             }
 
         }

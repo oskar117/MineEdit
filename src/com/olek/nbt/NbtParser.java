@@ -35,6 +35,7 @@ public class NbtParser {
         pointer += 2;
 
         int length = fileContent[pointer++];
+        //TODO string builder
         String name = "";
         int y = pointer + length;
         for(;pointer < y; pointer++) {
@@ -158,8 +159,12 @@ public class NbtParser {
                 return getTagFloat(null, fileContent);
             } case 6: {
                 return getTagDouble(null, fileContent);
+            } case 7: {
+                return getTagByteArray(null, fileContent);
             } case 8: {
                 return getTagString(null, fileContent);
+            } case 9: {
+                return getTagList(null, fileContent);
             } case 10: {
                 int counter = stack.size();
                 stack.add(new TagCompound(null));
@@ -177,8 +182,11 @@ public class NbtParser {
                 Tag temp = stack.get(stack.size()-1).getLastTag();
                 stack.get(stack.size() - 1).deleteLast();
                 return temp;
-            }
-            default: {
+            } case 11: {
+                return getTagIntArray(null, fileContent);
+            } case 12: {
+                return getTagLongArray(null, fileContent);
+            } default: {
                 return null;
             }
         }

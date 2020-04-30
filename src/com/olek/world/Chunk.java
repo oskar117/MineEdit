@@ -44,7 +44,6 @@ public class Chunk {
                 if(blockStates != null && palette != null) {
                     generateBlocks(blockStates, palette, y);
                 } else {
-                    System.out.println("powietrze: "+y);
                     fillWithAir(y);
                 }
             } else {
@@ -85,7 +84,6 @@ public class Chunk {
                  }
              }
          }
-
     }
 
     private List<String> generatePalette(Tag palette) {
