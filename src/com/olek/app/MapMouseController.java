@@ -2,6 +2,7 @@ package com.olek.app;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 
 public class MapMouseController extends MouseAdapter {
 
@@ -36,6 +37,22 @@ public class MapMouseController extends MouseAdapter {
 
         prevY = currY;
         prevX = currX;
+    }
 
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+
+        int val = model.getChunkSize();
+
+        if(e.getWheelRotation() > 0) {
+            val /= 2;
+        } else {
+            val *= 2;
+        }
+
+        if(val > 0) {
+            model.setChunkSize(val);
+            model.update();
+        }
     }
 }

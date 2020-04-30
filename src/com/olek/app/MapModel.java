@@ -9,7 +9,7 @@ public class MapModel {
     private int chunkSize;
 
     public MapModel() {
-        chunkSize = 10;
+        chunkSize = 6;
         offsetX = 0;
         offsetY = 0;
     }
