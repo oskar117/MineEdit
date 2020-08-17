@@ -3,18 +3,18 @@ package com.olek.nbt;
 import com.olek.nbt.tags.*;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class NbtParser {
 
     private int pointer;
-    private List<TagCompound> stack;
+    private LinkedList<TagCompound> stack;
 
     //TODO pointer od 0 (do zapisu (ewentualnie))
     public NbtParser() {
         pointer = 3;
-        stack = new ArrayList<TagCompound>();
+        stack = new LinkedList<>();
     }
 
     public TagCompound decodeTag(byte[] fileContent) {
@@ -22,13 +22,13 @@ public class NbtParser {
 
         while(pointer < fileContent.length) {
             byte type = fileContent[pointer];
-            if(stack.size() == 0 || stack.get(stack.size() - 1) != null && type != 0) {
+            if(stack.size() == 0 || stack.getLast() != null && type != 0) {
                 name = getTagName(fileContent);
             }
             getTagPayload(type, fileContent, name);
         }
 
-        return stack.get(0);
+        return stack.getFirst();
     }
 
     private String getTagName(byte[] fileContent) {
@@ -173,14 +173,14 @@ public class NbtParser {
                 String name="";
                 do {
                     type = fileContent[pointer];
-                    if(stack.size() == 0 || stack.get(stack.size() - 1) != null && type != 0) {
+                    if(stack.size() == 0 || stack.getLast() != null && type != 0) {
                         name = getTagName(fileContent);
                     }
                     getTagPayload(type, fileContent, name);
                 } while(type != 0 || (stack.size() != (counter)));//do dopracowania
 
-                Tag temp = stack.get(stack.size()-1).getLastTag();
-                stack.get(stack.size() - 1).deleteLast();
+                Tag temp = stack.getLast().getLastTag();
+                stack.getLast().deleteLast();
                 return temp;
             } case 11: {
                 return getTagIntArray(null, fileContent);
@@ -199,57 +199,57 @@ public class NbtParser {
                     pointer++;
                     break;
                 }
-                Tag lastTag = stack.get(stack.size() - 1);
+                Tag lastTag = stack.getLast();
                 stack.remove(lastTag);
 
-                if(stack.get(stack.size() - 1) != null) {
-                    stack.get(stack.size() - 1).addTag(lastTag);
+                if(stack.getLast() != null) {
+                    stack.getLast().addTag(lastTag);
                 }
                 pointer++;
                 break;
             }
             case 1: {
-                stack.get(stack.size() - 1).addTag(new TagByte(name, fileContent[pointer++]));
+                stack.getLast().addTag(new TagByte(name, fileContent[pointer++]));
                 break;
             }
             case 2: {
                 TagShort tag = getTagShort(name, fileContent);
-                stack.get(stack.size() - 1).addTag(tag);
+                stack.getLast().addTag(tag);
                 break;
             }
             case 3: {
                 TagInt tag = getTagInt(name, fileContent);
-                stack.get(stack.size() - 1).addTag(tag);
+                stack.getLast().addTag(tag);
                 break;
             }
             case 4: {
                 TagLong tag = getTagLong(name, fileContent);
-                stack.get(stack.size() - 1).addTag(tag);
+                stack.getLast().addTag(tag);
                 break;
             }
             case 5: {
                 TagFloat tag = getTagFloat(name, fileContent);
-                stack.get(stack.size() - 1).addTag(tag);
+                stack.getLast().addTag(tag);
                 break;
             }
             case 6: {
                 TagDouble tag = getTagDouble(name, fileContent);
-                stack.get(stack.size() - 1).addTag(tag);
+                stack.getLast().addTag(tag);
                 break;
             }
             case 7: {
                 TagByteArray list = getTagByteArray(name, fileContent);
-                stack.get(stack.size() - 1).addTag(list);
+                stack.getLast().addTag(list);
                 break;
             }
             case 8: {
                 TagString tag = getTagString(name, fileContent);
-                stack.get(stack.size() - 1).addTag(tag);
+                stack.getLast().addTag(tag);
                 break;
             }
             case 9: {
                 TagList list = getTagList(name, fileContent);
-                stack.get(stack.size() - 1).addTag(list);
+                stack.getLast().addTag(list);
                 break;
             }
             case 10: {
@@ -258,12 +258,12 @@ public class NbtParser {
             }
             case 11: {
                 TagIntArray list = getTagIntArray(name, fileContent);
-                stack.get(stack.size() - 1).addTag(list);
+                stack.getLast().addTag(list);
                 break;
             }
             case 12: {
                 TagLongArray list = getTagLongArray(name, fileContent);
-                stack.get(stack.size() - 1).addTag(list);
+                stack.getLast().addTag(list);
                 break;
             }
             default: {
