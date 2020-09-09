@@ -55,11 +55,19 @@ public class Main {
            System.out.println();
        }
 */
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new MainFrame();
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (UnsupportedLookAndFeelException e) {
+                e.printStackTrace();
             }
+            new MainFrame();
         });
     }
 }
