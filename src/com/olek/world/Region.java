@@ -21,7 +21,7 @@ public class Region {
     private void parseRegion(RegionFile regionFile) {
 
         DataInputStream chunkDataStream;
-        NbtParser parser = null;
+        NbtParser parser = new NbtParser();
 
         for (int x = 0; x < 32; x++) {
 
@@ -30,7 +30,6 @@ public class Region {
                 System.out.println("CHUNK: "+ x + " " + z);
 
                 try {
-                    parser = new NbtParser();
                     chunkDataStream = regionFile.getChunkDataInputStream(x, z);
 
                     if(chunkDataStream != null) {

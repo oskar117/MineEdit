@@ -7,13 +7,11 @@ import java.util.List;
 
 public class Chunk {
 
-    private final TagCompound tg;
     private TagList section;
     private Heightmap heightMap;
     private Block[][][] blocks;
 
     public Chunk(TagCompound tg) throws EmptyChunkException {
-        this.tg = tg;
         section = (TagList) tg.getTag("Sections");
         List<Tag> tagList = section.getPayload();
         if(tagList.size() == 0) throw new EmptyChunkException();

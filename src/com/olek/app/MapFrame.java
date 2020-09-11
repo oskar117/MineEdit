@@ -16,6 +16,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.*;
 import java.nio.file.Files;
+import java.util.Arrays;
 
 public class MapFrame extends JPanel {
 
@@ -23,8 +24,12 @@ public class MapFrame extends JPanel {
     private MapModel model;
 
     public MapFrame() {
-        //File regionFile = new File("/home/olek/Projects/nbtparser/r.0.-1.mca");
-        File regionFile = new File("D:\\zadanka\\nbtparser\\r.21.37.mca");
+        //File regionFile = new File("/home/olek/Projects/nbtparser/testRes/r.0.-1.mca");
+        File test = new File("testRes/region");
+        String[] names = test.list();
+        Arrays.stream(names).forEach(System.out::println);
+
+        File regionFile = new File("D:\\zadanka\\nbtparser\\testRes\\r.21.37.mca");
         region = new Region(regionFile);
     }
 

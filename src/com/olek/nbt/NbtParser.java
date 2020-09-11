@@ -13,8 +13,7 @@ public class NbtParser {
 
     //TODO pointer od 0 (do zapisu (ewentualnie))
     public NbtParser() {
-        pointer = 3;
-        stack = new LinkedList<>();
+        setup();
     }
 
     public TagCompound decodeTag(byte[] fileContent) {
@@ -27,8 +26,17 @@ public class NbtParser {
             }
             getTagPayload(type, fileContent, name);
         }
+        TagCompound temp = stack.getFirst();
+        setup();
+        return temp;
+    }
 
-        return stack.getFirst();
+    private void setup() {
+        pointer = 3;
+        if (stack == null) {
+            stack = new LinkedList<>();
+        }
+        stack.clear();
     }
 
     private String getTagName(byte[] fileContent) {
