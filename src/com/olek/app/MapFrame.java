@@ -7,6 +7,7 @@ import com.olek.nbt.tags.TagCompound;
 import com.olek.world.Block;
 import com.olek.world.Chunk;
 import com.olek.world.Heightmap;
+import com.olek.world.Region;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,74 +19,13 @@ import java.nio.file.Files;
 
 public class MapFrame extends JPanel {
 
-    private Chunk[][] regionChunks;
+    private Region region;
     private MapModel model;
 
     public MapFrame() {
-       /* String outp = "D:\\zadanka\\nbtparser\\level_de.dat";
-        String in ="D:\\zadanka\\nbtparser\\level.dat";
-
-        //String outp = "/home/olek/Projects/nbtparser/level_de.dat";
-        //String in ="/home/olek/Projects/nbtparser/level.dat";
-
-        FileUtils fileUtils = new FileUtils();
-        FileOutputStream out = null;
-        try {
-            out = new FileOutputStream(outp);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            out = fileUtils.decompress(out, new FileInputStream(in));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        File file = new File(outp);
-        try {
-            byte[] fileContent = Files.readAllBytes(file.toPath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        */
-
-        //File region = new File("/home/olek/Projects/nbtparser/r.0.-1.mca");
-        File region = new File("D:\\zadanka\\nbtparser\\r.21.37.mca");
-
-        RegionFile regionFile = new RegionFile(region);
-        NbtParser parser;
-
-        regionChunks = new Chunk[32][32];
-        DataInputStream chunkDataStream;
-        for (int x = 0; x < 32; x++) {
-
-            for (int z = 0; z < 32; z++) {
-
-                System.out.println("CHUNK: "+ x + " " + z);
-
-                try {
-                    parser = new NbtParser();
-                    chunkDataStream = regionFile.getChunkDataInputStream(x, z);
-
-                    if(chunkDataStream != null) {
-                        regionChunks[x][z] = new Chunk(parser.decodeTag(chunkDataStream.readAllBytes()));
-                    } else {
-                        regionChunks[x][z] = null;
-                    }
-
-                    //Heightmap map = chunkTest.getHeightMap();
-                    //Block[][] mapArr = map.getMap();
-
-                } catch (IOException | Chunk.EmptyChunkException e) {
-                    regionChunks[x][z] = null;
-                    System.out.println("err: " +e.getMessage());
-                }
-
-                System.out.println("CHUNK DONE");
-
-            }
-
-        }
+        //File regionFile = new File("/home/olek/Projects/nbtparser/r.0.-1.mca");
+        File regionFile = new File("D:\\zadanka\\nbtparser\\r.21.37.mca");
+        region = new Region(regionFile);
     }
 
     @Override
@@ -94,6 +34,7 @@ public class MapFrame extends JPanel {
         super.paintComponent(g);
 
         int chunkSize = model.getChunkSize();
+        Chunk[][] regionChunks = region.getRegionChunks();
 
         for (int x = 0; x < 32; x++) {
             for (int y = 0; y < 32; y++) {
