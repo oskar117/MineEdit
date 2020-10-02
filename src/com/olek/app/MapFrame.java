@@ -1,5 +1,6 @@
 package com.olek.app;
 
+import com.olek.io.Serializator;
 import com.olek.nbt.FileUtils;
 import com.olek.nbt.NbtParser;
 import com.olek.nbt.RegionFile;
@@ -21,6 +22,7 @@ import java.util.Arrays;
 public class MapFrame extends JPanel {
 
     private Region region;
+    //private Region region2;
     private MapModel model;
 
     public MapFrame() {
@@ -31,6 +33,9 @@ public class MapFrame extends JPanel {
 
         File regionFile = new File("D:\\zadanka\\nbtparser\\testRes\\r.21.37.mca");
         region = new Region(regionFile);
+        //Serializator.serialize("test.xd", region);
+        //region2 = new Region(regionFile);
+
     }
 
     @Override

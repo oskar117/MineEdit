@@ -1,5 +1,7 @@
 package com.olek.world;
 
+import java.io.Serializable;
+
 public class Block {
 
     private String name;
