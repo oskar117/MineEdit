@@ -28,7 +28,7 @@ public class Region {
 
             for (int z = 0; z < 32; z++) {
 
-                System.out.println("CHUNK: "+ x + " " + z);
+                //System.out.println("CHUNK: "+ x + " " + z);
 
                 try {
                     chunkDataStream = regionFile.getChunkDataInputStream(x, z);
@@ -44,10 +44,10 @@ public class Region {
 
                 } catch (IOException | Chunk.EmptyChunkException e) {
                     regionChunks[x][z] = null;
-                    System.out.println("err: " +e.getMessage());
+                    System.err.println("err: " +e.getMessage());
                 }
 
-                System.out.println("CHUNK DONE");
+                //System.out.println("CHUNK DONE");
 
             }
         }

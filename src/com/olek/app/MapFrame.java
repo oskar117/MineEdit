@@ -1,6 +1,5 @@
 package com.olek.app;
 
-import com.olek.io.Serializator;
 import com.olek.nbt.FileUtils;
 import com.olek.nbt.NbtParser;
 import com.olek.nbt.RegionFile;
@@ -18,24 +17,23 @@ import java.awt.event.MouseMotionListener;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 public class MapFrame extends JPanel {
 
     private Region region;
-    //private Region region2;
     private MapModel model;
 
     public MapFrame() {
         //File regionFile = new File("/home/olek/Projects/nbtparser/testRes/r.0.-1.mca");
         File test = new File("testRes/region");
-        String[] names = test.list();
-        Arrays.stream(names).forEach(System.out::println);
+
+        final Pattern p = Pattern.compile("r\\.-?\\d*\\.?\\d+\\.-?\\d*\\.?\\d+\\.mca");
+        File[] pagesTemplates = test.listFiles(f -> p.matcher(f.getName()).matches());
+        Arrays.stream(pagesTemplates).forEach(System.out::println);
 
         File regionFile = new File("D:\\zadanka\\nbtparser\\testRes\\r.21.37.mca");
         region = new Region(regionFile);
-        //Serializator.serialize("test.xd", region);
-        //region2 = new Region(regionFile);
-
     }
 
     @Override
