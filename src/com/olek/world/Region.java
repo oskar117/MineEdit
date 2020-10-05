@@ -7,15 +7,20 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Region {
 
+    private int regionX;
+    private int regionY;
     private Chunk[][] regionChunks;
 
     public Region(File file) {
         regionChunks = new Chunk[32][32];
-        RegionFile regionFile = new RegionFile(file);
-        parseRegion(regionFile);
+        parseRegion(new RegionFile(file));
+        getChunkCoordinates(file.getName());
+        System.out.println(regionX + " : " +regionY);
     }
 
     //TODO code again (that parser xd)
@@ -50,6 +55,15 @@ public class Region {
                 //System.out.println("CHUNK DONE");
 
             }
+        }
+    }
+
+    private void getChunkCoordinates(String fileName) {
+        final Pattern pattern = Pattern.compile("(-?\\d+)\\D+(-?\\d+)");
+        Matcher matcher = pattern.matcher(fileName);
+        if(matcher.find()) {
+            regionX = Integer.parseInt(matcher.group(1));
+            regionY = Integer.parseInt(matcher.group(2));
         }
     }
 
