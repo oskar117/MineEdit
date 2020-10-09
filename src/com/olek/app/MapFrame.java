@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 public class MapFrame extends JPanel {
 
-    private Region region;
+    private Dimension mapFrameSize;
     private MapModel model;
     private World world;
 
@@ -38,11 +38,12 @@ public class MapFrame extends JPanel {
     protected void paintComponent(Graphics g) {
 
         super.paintComponent(g);
+        mapFrameSize = g.getClipBounds().getSize();
 
         int chunkSize = model.getChunkSize();
         Region[][] regions = world.getRegions();
-        for (int rX = 0; rX < 4; rX++) {
-            for (int rY = 0; rY < 4; rY++) {
+        for (int rX = 0; rX < regions.length; rX++) {
+            for (int rY = 0; rY < regions[0].length; rY++) {
                 Chunk[][] regionChunks = regions[rX][rY].getRegionChunks();
                 for (int x = 0; x < 32; x++) {
                     for (int y = 0; y < 32; y++) {
@@ -54,10 +55,15 @@ public class MapFrame extends JPanel {
                         for (int xx = 0; xx < 16; xx++) {
                             for (int yy = 0; yy < 16; yy++) {
                                 String tile = mapArr[xx][yy].getName().replaceAll("minecraft:", "");
-                                g.setColor(getTileColor(tile));
                                 int xxx = (x * 16 * chunkSize) + (yy * chunkSize) + model.getOffsetX() + (rX * chunkSize * 32*16);
                                 int yyy = (y * 16 * chunkSize) + (xx * chunkSize) + model.getOffsetY() + (rY * chunkSize * 32*16);
-                                g.fillRect(xxx, yyy, chunkSize, chunkSize);
+
+                                if (xxx <= mapFrameSize.width || yyy <= mapFrameSize.height ) {
+                                    g.setColor(getTileColor(tile));
+                                    g.fillRect(xxx, yyy, chunkSize, chunkSize);
+                                } else {
+                                    break;
+                                }
                             }
                         }
                     }
@@ -77,7 +83,10 @@ public class MapFrame extends JPanel {
             case "tall_grass":
             case "poppy": {
                 return new Color(131, 150, 58);
-            } case "sandstone":{
+            }
+            case "sand":
+                return new Color(239, 243, 154);
+            case "sandstone":{
                 return new Color(222,215, 172);
             } case "slime_block": {
                 return Color.CYAN;
