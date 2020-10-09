@@ -20,7 +20,6 @@ public class Region {
         regionChunks = new Chunk[32][32];
         parseRegion(new RegionFile(file));
         getChunkCoordinates(file.getName());
-        System.out.println(regionX + " : " +regionY);
     }
 
     //TODO code again (that parser xd)
@@ -49,7 +48,7 @@ public class Region {
 
                 } catch (IOException | Chunk.EmptyChunkException e) {
                     regionChunks[x][z] = null;
-                    System.err.println("err: " +e.getMessage());
+                    //System.err.println("err: " +e.getMessage());
                 }
 
                 //System.out.println("CHUNK DONE");
@@ -59,7 +58,7 @@ public class Region {
     }
 
     private void getChunkCoordinates(String fileName) {
-        final Pattern pattern = Pattern.compile("(-?\\d+)\\D+(-?\\d+)");
+        final Pattern pattern = Pattern.compile("r\\.(-?\\d+)\\.(-?\\d+)\\.mca");
         Matcher matcher = pattern.matcher(fileName);
         if(matcher.find()) {
             regionX = Integer.parseInt(matcher.group(1));
@@ -69,5 +68,13 @@ public class Region {
 
     public Chunk[][] getRegionChunks() {
         return regionChunks;
+    }
+
+    public int getRegionX() {
+        return regionX;
+    }
+
+    public int getRegionY() {
+        return regionY;
     }
 }

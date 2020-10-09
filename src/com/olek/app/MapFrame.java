@@ -4,10 +4,7 @@ import com.olek.nbt.FileUtils;
 import com.olek.nbt.NbtParser;
 import com.olek.nbt.RegionFile;
 import com.olek.nbt.tags.TagCompound;
-import com.olek.world.Block;
-import com.olek.world.Chunk;
-import com.olek.world.Heightmap;
-import com.olek.world.Region;
+import com.olek.world.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,6 +20,7 @@ public class MapFrame extends JPanel {
 
     private Region region;
     private MapModel model;
+    private World world;
 
     public MapFrame() {
         //File regionFile = new File("/home/olek/Projects/nbtparser/testRes/r.0.-1.mca");
@@ -30,10 +28,10 @@ public class MapFrame extends JPanel {
 
         final Pattern p = Pattern.compile("r\\.-?\\d*\\.?\\d+\\.-?\\d*\\.?\\d+\\.mca");
         File[] pagesTemplates = test.listFiles(f -> p.matcher(f.getName()).matches());
-        Arrays.stream(pagesTemplates).forEach(System.out::println);
+        world = new World(pagesTemplates);
 
-        File regionFile = new File("D:\\zadanka\\nbtparser\\testRes\\r.21.37.mca");
-        region = new Region(regionFile);
+        //File regionFile = new File("D:\\zadanka\\nbtparser\\testRes\\r.21.37.mca");
+        //region = new Region(regionFile);
     }
 
     @Override
@@ -42,22 +40,26 @@ public class MapFrame extends JPanel {
         super.paintComponent(g);
 
         int chunkSize = model.getChunkSize();
-        Chunk[][] regionChunks = region.getRegionChunks();
+        Region[][] regions = world.getRegions();
+        for (int rX = 0; rX < 4; rX++) {
+            for (int rY = 0; rY < 4; rY++) {
+                Chunk[][] regionChunks = regions[rX][rY].getRegionChunks();
+                for (int x = 0; x < 32; x++) {
+                    for (int y = 0; y < 32; y++) {
 
-        for (int x = 0; x < 32; x++) {
-            for (int y = 0; y < 32; y++) {
+                        if(regionChunks[x][y] == null) continue;
+                        Heightmap map = regionChunks[x][y].getHeightMap();
+                        Block[][] mapArr = map.getMap();
 
-                if(regionChunks[x][y] == null) continue;
-                Heightmap map = regionChunks[x][y].getHeightMap();
-                Block[][] mapArr = map.getMap();
-
-                for (int xx = 0; xx < 16; xx++) {
-                    for (int yy = 0; yy < 16; yy++) {
-                        String tile = mapArr[xx][yy].getName().replaceAll("minecraft:", "");
-                        g.setColor(getTileColor(tile));
-                        int xxx = (x * 16 * chunkSize) + (yy * chunkSize) + model.getOffsetX();
-                        int yyy = (y * 16 * chunkSize) + (xx * chunkSize) + model.getOffsetY();
-                        g.fillRect(xxx, yyy, chunkSize, chunkSize);
+                        for (int xx = 0; xx < 16; xx++) {
+                            for (int yy = 0; yy < 16; yy++) {
+                                String tile = mapArr[xx][yy].getName().replaceAll("minecraft:", "");
+                                g.setColor(getTileColor(tile));
+                                int xxx = (x * 16 * chunkSize) + (yy * chunkSize) + model.getOffsetX() + (rX * chunkSize * 32*16);
+                                int yyy = (y * 16 * chunkSize) + (xx * chunkSize) + model.getOffsetY() + (rY * chunkSize * 32*16);
+                                g.fillRect(xxx, yyy, chunkSize, chunkSize);
+                            }
+                        }
                     }
                 }
             }
@@ -84,6 +86,9 @@ public class MapFrame extends JPanel {
             } case "diorite":
             case "polished_diorite": {
                 return Color.WHITE;
+            }
+            case "water": {
+                return new Color(42, 62, 255);
             }
             default: {
                 return Color.GRAY;
